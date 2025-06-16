@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ### Usage 
 ```bash
-# python3 main.py --url <URL> --emails --phones --links --whois --ipinfo --subdomains
+python3 main.py --url <URL> --emails --phones --links --whois --ipinfo --subdomains
 ```
 
 

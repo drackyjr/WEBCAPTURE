@@ -1,5 +1,5 @@
 # @ibrahimsql
-# scree 
+# screenshot modules
 
 import os
 import time

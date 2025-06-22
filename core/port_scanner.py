@@ -1,5 +1,5 @@
 # @ibrahimsql 
-# Advanced port scanner modules
+# port scanner modules
 import socket
 import threading
 import time

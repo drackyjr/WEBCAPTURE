@@ -4,6 +4,8 @@ from core.connection import check_connection
 from core.validation import is_valid_url
 from core.scraper import scrape_website
 from core.save import save_results
+from core.screenshot import take_screenshot
+from core.port_scanner import scan_target_ports, quick_scan, stealth_scan, comprehensive_scan, format_scan_results
 from osint.whois_lookup import whois_lookup
 from osint.ip_info import ip_info
 from osint.subdomain_enum import enumerate_subdomains
@@ -72,6 +74,8 @@ def format_section(title, content, color="\033[1;97m"):
             content = format_whois(content)
         elif title.upper() == "IPINFO":
             content = format_ipinfo(content)
+        elif title.upper() == "PORT_SCAN":
+            content = format_scan_results(content)
         else:
             content = json.dumps(content, indent=2)
     elif isinstance(content, list):
@@ -83,15 +87,30 @@ def format_section(title, content, color="\033[1;97m"):
     return f"{color}[{title}]\033[0m\n{content}"
 
 def main():
-    parser = argparse.ArgumentParser(description="Advanced OSINT Tool")
-    parser.add_argument("--url", required=True)
-    parser.add_argument("--emails", action="store_true")
-    parser.add_argument("--phones", action="store_true")
-    parser.add_argument("--links", action="store_true")
-    parser.add_argument("--whois", action="store_true")
-    parser.add_argument("--ipinfo", action="store_true")
-    parser.add_argument("--subdomains", action="store_true")
-    parser.add_argument("--check-stealer", action="store_true")
+    parser = argparse.ArgumentParser(description="Advanced OSINT Tool with Enhanced Port Scanning")
+    parser.add_argument("--url", required=True, help="Target URL to analyze")
+    parser.add_argument("--emails", action="store_true", help="Extract email addresses")
+    parser.add_argument("--phones", action="store_true", help="Extract phone numbers")
+    parser.add_argument("--links", action="store_true", help="Extract links")
+    parser.add_argument("--whois", action="store_true", help="Perform WHOIS lookup")
+    parser.add_argument("--ipinfo", action="store_true", help="Get IP geolocation info")
+    parser.add_argument("--subdomains", action="store_true", help="Enumerate subdomains")
+    parser.add_argument("--check-stealer", action="store_true", help="Check domain exposure")
+    parser.add_argument("--screenshot", action="store_true", help="Take website screenshot")
+    
+    # Enhanced port scanning options
+    parser.add_argument("--port-scan", action="store_true", help="Enable port scanning")
+    parser.add_argument("--scan-type", choices=['common', 'top1000', 'range', 'quick', 'comprehensive'], 
+                       default='common', help="Type of port scan to perform")
+    parser.add_argument("--protocol", choices=['tcp', 'udp', 'both'], default='tcp', 
+                       help="Protocol to scan (tcp, udp, or both)")
+    parser.add_argument("--grab-banner", action="store_true", 
+                       help="Grab service banners from open ports")
+    parser.add_argument("--stealth", action="store_true", 
+                       help="Enable stealth mode for port scanning")
+    parser.add_argument("--port-range", nargs=2, type=int, metavar=('START', 'END'),
+                       help="Custom port range for scanning (e.g., --port-range 1 1000)")
+    
     parser.add_argument("--save", type=str, help="Folder to save results")
     args = parser.parse_args()
 
@@ -136,6 +155,50 @@ def main():
     if args.check_stealer:
         stop_event = start_loading("Checking domain exposure...")
         results['cavalier'] = check_domain_exposure(domain)
+        stop_event.set()
+        time.sleep(0.1)
+
+    # Screenshot capture with loading animation
+    if args.screenshot:
+        stop_event = start_loading("Taking website screenshot...")
+        results['screenshot'] = take_screenshot(args.url)
+        stop_event.set()
+        time.sleep(0.1)
+
+    # Port scanning with loading animation
+    if getattr(args, 'port_scan', False):
+        scan_type = getattr(args, 'scan_type', 'common')
+        protocol = getattr(args, 'protocol', 'tcp')
+        grab_banner = getattr(args, 'grab_banner', False)
+        stealth_mode = getattr(args, 'stealth', False)
+        port_range = getattr(args, 'port_range', None)
+        
+        # Handle custom port range
+        if port_range and scan_type == 'range':
+            start_port, end_port = port_range
+        else:
+            start_port, end_port = 1, 1000
+        
+        if stealth_mode:
+            stop_event = start_loading("Performing stealth port scan...")
+            results['port_scan'] = stealth_scan(domain, scan_type=scan_type, grab_banner=grab_banner)
+        elif scan_type == 'quick':
+            stop_event = start_loading("Performing quick port scan...")
+            results['port_scan'] = quick_scan(domain, grab_banner=grab_banner)
+        elif scan_type == 'comprehensive':
+            stop_event = start_loading("Performing comprehensive port scan...")
+            results['port_scan'] = comprehensive_scan(domain, grab_banner=grab_banner)
+        else:
+            stop_event = start_loading(f"Scanning {scan_type} ports...")
+            results['port_scan'] = scan_target_ports(
+                target=domain,
+                scan_type=scan_type,
+                start_port=start_port,
+                end_port=end_port,
+                protocol=protocol,
+                grab_banner=grab_banner,
+                stealth_mode=stealth_mode
+            )
         stop_event.set()
         time.sleep(0.1)
 

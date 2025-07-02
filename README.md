@@ -1,39 +1,156 @@
-# 🕸️ WEBCAPTURE
 
-> A stealthy website screenshotting tool for recon, automation, and visual intelligence gathering.
+# 🛰️ webcapture - The OSINT Tool
 
-## 🔍 Overview
+**An elite command-line reconnaissance framework for automated Open Source Intelligence gathering.**  
+Crafted for cybersecurity professionals, red teamers, and digital investigators who walk the line between shadows and signals.
 
-`WEBCAPTURE` is a simple yet powerful utility for capturing full-page or viewport screenshots of websites. It’s built for OSINT analysts, bug bounty hunters, and security researchers who need quick visual snapshots of live web targets. Useful in reconnaissance, monitoring, or archiving website states.
-<video src="https://github.com/drackyjr/WEBCAPTURE/blob/main/Screencast%20From%202025-06-16%2019-45-13.mp4" controls></video>
+---
 
+## 🚀 Overview
 
-## 🚀 Features
+This project is an **Advanced OSINT Tool** designed to gather and analyze publicly available intelligence from a given website or domain.  
+It automates key reconnaissance and scanning tasks such as:
 
-- 📸 Capture full-page or viewport screenshots
-- 🧠 Fast and minimal footprint
-- ⚙️ CLI-based usage for automation
-- 🕵️‍♂️ Ideal for recon workflows and threat hunting
+- Email, phone number, and hyperlink extraction  
+- WHOIS information retrieval  
+- IP address intelligence  
+- Subdomain enumeration  
+- Exposure to info-stealer malware (Cavalier check)
 
-## 🛠️ Requirements
+Built for efficiency, modularity, and stealth.
 
-- Python 3.8+
-- Linux / Windows / MacOS
-- Google Chrome or Chromium (headless mode)
-- `pip` for installing dependencies
+---
 
-## 🧪 Installation
+## 🧩 Project Structure
+
+```
+
+.
+├── main.py                 # Entry point of the tool
+├── core/                   # Core modules
+│   ├── banner.py           # Displays fancy ASCII banner
+│   ├── connection.py       # Internet connectivity checker
+│   ├── validation.py       # URL validation
+│   ├── scraper.py          # Scrapes emails, phones, and links
+│   ├── save.py             # Saves results locally
+├── osint/                  # OSINT-specific modules
+│   ├── whois\_lookup.py     # WHOIS data retrieval
+│   ├── ip\_info.py          # IP info extraction
+│   ├── subdomain\_enum.py   # Subdomain enumeration
+│   ├── cavalier\_check.py   # Checks for info-stealer exposure
+├── test/                   # Placeholder for test scripts
+├── requirements.txt        # Python dependencies
+
+````
+
+---
+
+## ⚙️ Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/drackyjr/WEBCAPTURE.git
-cd WEBCAPTURE
+git clone https://github.com/your-username/advanced-osint-tool.git
+cd advanced-osint-tool
+pip install -r requirements.txt
+````
+
+---
+
+## 💡 Usage
+
+Run the tool from the terminal with desired flags:
+
+```bash
+python main.py --url https://example.com \
+               --emails \
+               --phones \
+               --links \
+               --whois \
+               --ipinfo \
+               --subdomains \
+               --check-stealer \
+               --save output_folder
+```
+
+### 🔍 Available Flags
+
+| Flag              | Description                            |
+| ----------------- | -------------------------------------- |
+| `--url`           | Target domain or website               |
+| `--emails`        | Extract email addresses                |
+| `--phones`        | Extract phone numbers                  |
+| `--links`         | Extract hyperlinks                     |
+| `--whois`         | Perform WHOIS lookup                   |
+| `--ipinfo`        | Fetch IP address details               |
+| `--subdomains`    | Enumerate subdomains                   |
+| `--check-stealer` | Check exposure to info-stealer malware |
+| `--save`          | Save results to specified folder       |
+
+---
+
+## 🛡️ Features
+
+* 🔍 Deep scraping of targets
+* 🌐 WHOIS + IP intelligence
+* 🕵️ Subdomain discovery
+* ☣️ Info-stealer threat exposure checks
+* 📁 Output saving to local storage
+* 💻 CLI-native with modular architecture
+
+---
+
+## 🧠 Ideal For
+
+* Security Analysts
+* Red Team Operators
+* OSINT Investigators
+* Threat Intelligence Researchers
+
+---
+
+## 📦 Dependencies
+
+* `requests`
+* `beautifulsoup4`
+* `python-whois`
+
+Install all via:
+
+```bash
 pip install -r requirements.txt
 ```
 
-### Usage 
-```bash
-python3 main.py --url <URL> --emails --phones --links --whois --ipinfo --subdomains
-```
+---
 
+## ⚔️ Future Enhancements
+
+* [ ] Integration with Shodan or Censys API
+* [ ] Passive DNS collection
+* [ ] PDF & CSV reporting
+* [ ] GUI frontend (optional)
+
+---
+
+## 👨‍💻 Author
+
+Built by **Dracky** —
+Crafted with stealth, precision, and code.
+*“Think like a hacker. Act like a ghost.”*
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🧭 Disclaimer
+
+This tool is intended for **educational and authorized penetration testing** only.
+Unauthorized use against targets without explicit permission is **strictly prohibited**.
+
+---
 
 
